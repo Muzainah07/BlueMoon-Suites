@@ -9,6 +9,8 @@ import Bookings from "./pages/Bookings";
 import AdminDashboard from "./pages/AdminDashboard";
 import BookingList from "./pages/BookingList";
 import "./App.css";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function AppRoutes() {
   const location = useLocation();
@@ -22,13 +24,48 @@ function AppRoutes() {
       {!hideNavbar && <Navbar />}
       <main className={flush ? "app-content flush" : "app-content"}>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/home" element={<RequireAuth><Home /></RequireAuth>} />
-          <Route path="/bookings" element={<RequireAuth><Bookings /></RequireAuth>} />
-          <Route path="/my-bookings" element={<RequireAuth><BookingList /></RequireAuth>} />
-          <Route path="/admin" element={<AdminDashboard />} />
-        </Routes>
+  <Route path="/" element={<LandingPage />} />
+  <Route path="/login" element={<LoginPage />} />
+
+  <Route
+    path="/forgot-password"
+    element={<ForgotPassword />}
+  />
+
+  <Route
+    path="/reset-password"
+    element={<ResetPassword />}
+  />
+
+  <Route
+    path="/home"
+    element={
+      <RequireAuth>
+        <Home />
+      </RequireAuth>
+    }
+  />
+
+  <Route
+    path="/bookings"
+    element={
+      <RequireAuth>
+        <Bookings />
+      </RequireAuth>
+    }
+  />
+
+  <Route
+    path="/my-bookings"
+    element={
+      <RequireAuth>
+        <BookingList />
+      </RequireAuth>
+    }
+  />
+
+  <Route path="/admin" element={<AdminDashboard />} />
+</Routes>
       </main>
     </div>
   );
