@@ -364,7 +364,7 @@ export default function Home() {
                 </div>
 
                 <p className="review-comment">
-                  {review.comment}
+                  Anonymous
                 </p>
               </div>
             ))
