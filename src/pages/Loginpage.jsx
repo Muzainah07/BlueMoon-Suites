@@ -31,34 +31,58 @@ export default function Login() {
     }
   }
 
-  async function handleRegister(e) {
-    e.preventDefault();
+ async function handleRegister(e) {
+  e.preventDefault();
 
-    if (password !== confirmPassword) {
-      setMessage({ type: "error", text: "Passwords do not match." });
-      return;
-    }
-
-    setLoading(true);
-    setMessage(null);
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: window.location.origin + "/home" },
+  if (password !== confirmPassword) {
+    setMessage({
+      type: "error",
+      text: "Passwords do not match.",
     });
-
-    setLoading(false);
-    if (error) {
-      setMessage({ type: "error", text: error.message });
-    } else {
-      setMessage({ type: "success", text: "Account created! Check your email to confirm." });
-      setIsRegister(false);
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-    }
+    return;
   }
+
+  setLoading(true);
+  setMessage(null);
+
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim(),
+    password,
+    options: {
+      emailRedirectTo: window.location.origin + "/home",
+    },
+  });
+
+  setLoading(false);
+
+  if (error) {
+    setMessage({
+      type: "error",
+      text: error.message,
+    });
+    return;
+  }
+
+  // Supabase can return a successful response for an email
+  // that already has an account when email confirmation is enabled.
+  if (data?.user && data.user.identities?.length === 0) {
+    setMessage({
+      type: "error",
+      text: "An account with this email already exists. Please sign in instead.",
+    });
+    return;
+  }
+
+  setMessage({
+    type: "success",
+    text: "Account created! Please check your email to confirm your account.",
+  });
+
+  setIsRegister(false);
+  setEmail("");
+  setPassword("");
+  setConfirmPassword("");
+}
 
   return (
     <div className="login-page">
