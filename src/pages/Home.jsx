@@ -341,7 +341,7 @@ export default function Home() {
 
                   <div>
                     <p className="review-name">
-                      {review.user_name}
+                     Anonymous
                     </p>
 
                     <div className="review-stars">
@@ -364,7 +364,7 @@ export default function Home() {
                 </div>
 
                 <p className="review-comment">
-                  Anonymous
+                  {review.comment}
                 </p>
               </div>
             ))
