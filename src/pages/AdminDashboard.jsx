@@ -30,28 +30,40 @@ export default function AdminDashboard() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [loggingIn, setLoggingIn] = useState(false);
 
-  function handleLogin(e) {
-    e.preventDefault();
-    setLoggingIn(true);
-    setTimeout(() => {
-      if (login.username === "Muzainah" && login.password === "muzainahkhan") {
-        setIsAdmin(true);
-        setLoginError("");
-        fetchBookings();
-        fetchRooms();
-      } else {
-        setLoginError("Invalid username or password.");
-      }
+ async function handleLogin(e) {
+  e.preventDefault();
+  setLoggingIn(true);
+
+  if (login.username === "Muzainah" && login.password === "muzainahkhan") {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: "bluemoonsuites.auth@gmail.com",  
+      password: "AdminPass2026!",          
+    });
+
+    if (error) {
+      console.error("Backend session error:", error.message);
+      setLoginError("Something went wrong. Try again.");
       setLoggingIn(false);
-    }, 300);
+      return;
+    }
+
+    setIsAdmin(true);
+    setLoginError("");
+    fetchBookings();
+    fetchRooms();
+  } else {
+    setLoginError("Invalid username or password.");
   }
 
-  function handleLogout() {
-    setIsAdmin(false);
-    setLogin({ username: "", password: "" });
-    setActiveSection("dashboard");
-  }
+  setLoggingIn(false);
+}
 
+  async function handleLogout() {
+  await supabase.auth.signOut();
+  setIsAdmin(false);
+  setLogin({ username: "", password: "" });
+  setActiveSection("dashboard");
+}
   async function fetchBookings() {
     const { data } = await supabase.from("bookings").select("*");
     setBookings(data || []);
